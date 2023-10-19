@@ -36,16 +36,30 @@ public class Stack<T> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return null;
-    }
+        return new Iterator<>() {
+            private Node<T> current = head;
 
-    @Override
-    public void forEach(Consumer action) {
-        Iterable.super.forEach(action);
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                final T item = current.value;
+                current = current.next;
+
+                return item;
+            }
+        };
     }
 
     private static class Node<T> {
-        private T value;
+        private final T value;
         private Node<T>  next;
 
         public Node(T value) {
